@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.backend
+    environment:
+      METHODPAL_ENV: production
+      METHODPAL_ORIGINS: ${METHODPAL_ORIGINS:?Set explicit HTTPS origin}
+      METHODPAL_ALLOWED_HOSTS: ${METHODPAL_ALLOWED_HOSTS:?Set allowed hosts},127.0.0.1
+      METHODPAL_DATA_ROOT: /data
+      METHODPAL_REGISTRATION: ${METHODPAL_REGISTRATION:-open}
+      METHODPAL_CAPTCHA_REQUIRED: ${METHODPAL_CAPTCHA_REQUIRED:-1}
+      METHODPAL_ACCOUNT_QUOTA_BYTES: ${METHODPAL_ACCOUNT_QUOTA_BYTES:-524288000}
+      METHODPAL_SMTP_HOST: ${METHODPAL_SMTP_HOST:-}
+      METHODPAL_SMTP_PORT: ${METHODPAL_SMTP_PORT:-465}
+      METHODPAL_SMTP_TLS: ${METHODPAL_SMTP_TLS:-ssl}
+      METHODPAL_SMTP_USER: ${METHODPAL_SMTP_USER:-}
+      METHODPAL_SMTP_PASSWORD: ${METHODPAL_SMTP_PASSWORD:-}
+      METHODPAL_SMTP_FROM: ${METHODPAL_SMTP_FROM:-}
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+    volumes:
+      - methodpal_data:/data
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 2g
+    cpus: 2
+  frontend:
+    build:
+      context: .
+      dockerfile: deploy/Dockerfile.frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:80"
+    restart: unless-stopped
+volumes:
+  methodpal_data:

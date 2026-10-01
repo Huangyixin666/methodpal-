@@ -1,0 +1,30 @@
+[Unit]
+Description=MethodPal API
+After=network.target
+
+[Service]
+Type=simple
+User=methodpal
+Group=methodpal
+WorkingDirectory=/opt/methodpal/current/backend
+EnvironmentFile=-/etc/methodpal/llm.env
+EnvironmentFile=/etc/methodpal/server.env
+EnvironmentFile=-/etc/methodpal/email.env
+Environment=PYTHONUNBUFFERED=1 OMP_NUM_THREADS=2 OPENBLAS_NUM_THREADS=2 MPLBACKEND=Agg
+Environment=MPLCONFIGDIR=/var/lib/methodpal/.cache/matplotlib
+Environment=METHODPAL_CAPTCHA_REQUIRED=1
+ExecStart=/opt/methodpal/venv/bin/python -m uvicorn main:app --host 127.0.0.1 --port 8000 --workers 1 --limit-concurrency 32 --timeout-keep-alive 5 --no-proxy-headers
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ReadWritePaths=/var/lib/methodpal
+UMask=0077
+MemoryMax=2560M
+CPUQuota=200%
+
+[Install]
+WantedBy=multi-user.target

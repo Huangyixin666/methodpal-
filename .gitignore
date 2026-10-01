@@ -1,0 +1,47 @@
+# 私有环境配置；仅允许不含凭据的模板。
+.env*
+*.env
+!.env.example
+!.env.*.example
+!*.env.example
+
+# 运行数据、研究文件和本地备份。
+backend/storage/
+backend/app/storage/
+# 本地临时测试输入，无源码引用；保留在磁盘，不随项目提交。
+/backend/test_methodpal.csv
+backups/
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.sqlite3-*
+*.db
+*.db-*
+
+# SSH / TLS 私钥和证书容器。
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa
+id_ecdsa
+id_ed25519
+
+# 构建、虚拟环境、缓存、临时目录和日志。
+node_modules/
+dist/
+tmp/
+_tmp_*/
+/_tmp_*
+.runtime_logs/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+*.log
+.idea/
+.DS_Store
+Thumbs.db

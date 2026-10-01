@@ -1,0 +1,3 @@
+# Canonical installation entry; keep exact package versions in one place.
+# Intended for a fresh deployment environment, not upgrading a system Python.
+-r requirements-deploy.txt
